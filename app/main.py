@@ -2,7 +2,8 @@ from fastapi import FastAPI, HTTPException
 
 from app.logger import logger
 from app.schemas import (
-    NumberInput,
+    FibonacciInput,
+    FactorialInput,
     FibonacciResponse,
     FactorialResponse,
     LoanInput,
@@ -32,20 +33,20 @@ def health_check():
     }
 
 @app.post("/fibonacci", response_model=FibonacciResponse)
-def fibonacci(input_data: NumberInput):
+def fibonacci(input_data: FibonacciInput):
     try:
         logger.info(f"Fibonacci request received: n={input_data.n}")
         result = calculate_fibonacci(input_data.n)
-        return FibonacciResponse(n=input_data.n, result=result)
+        return FibonacciResponse(n=input_data.n, result=str(result))
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
 
 @app.post("/factorial", response_model=FactorialResponse)
-def factorial(input_data: NumberInput):
+def factorial(input_data: FactorialInput):
     try:
         logger.info(f"Factorial request received: n={input_data.n}")
         result = calculate_factorial(input_data.n)
-        return FactorialResponse(n=input_data.n, result=result)
+        return FactorialResponse(n=input_data.n, result=str(result))
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
 
