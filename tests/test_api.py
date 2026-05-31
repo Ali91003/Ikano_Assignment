@@ -16,12 +16,12 @@ def test_health_check():
 def test_fibonacci():
     response = client.post("/fibonacci", json={"n": 10})
     assert response.status_code==200
-    assert response.json()=={"n": 10, "result": 55}
+    assert response.json()=={"n": 10, "result": "55"}
 
 def test_factorial():
     response = client.post("/factorial", json={"n": 5})
     assert response.status_code==200
-    assert response.json()=={"n": 5, "result": 120}
+    assert response.json()=={"n": 5, "result": "120"}
 
 def test_loan_repayment():
     response = client.post(
@@ -60,7 +60,11 @@ def test_loan_repayment_invalidmonths():
     assert response.status_code==422
 
 def test_fibonacci_toolargenumber():
-    response = client.post("/fibonacci", json={"n": 10001})
+    response = client.post("/fibonacci", json={"n": 501})
+    assert response.status_code==422
+
+def test_factorial_toolargenumber():
+    response = client.post("/factorial", json={"n": 101})
     assert response.status_code==422
 
 def test_loan_repayment_toomanymonths():
@@ -70,6 +74,17 @@ def test_loan_repayment_toomanymonths():
             "principal": 100000,
             "annual_rate": 5,
             "months": 1201,
+        },
+    )
+    assert response.status_code==422
+
+def test_loan_repayment_toomuchprincipal():
+    response = client.post(
+        "/loan-repayment",
+        json={
+            "principal": 1000000000001,
+            "annual_rate": 5,
+            "months": 1200,
         },
     )
     assert response.status_code==422
