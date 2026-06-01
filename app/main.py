@@ -23,6 +23,7 @@ def root():
     return {
         "message": "Ikano Assignment is running",
         "docs": "/docs",
+        "health": "/health",
     }
 @app.get("/health")
 def health_check():
